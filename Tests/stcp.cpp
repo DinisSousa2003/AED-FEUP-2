@@ -85,7 +85,7 @@ void STCP::addEdges(Graph &g1) {
             string s2 = (*it0);
             int idx1 = indexStops.at(s1), idx2 = indexStops.at(s2);
             Stop stop1 = stops.at(idx1), stop2 = stops.at(idx2);
-            g1.addEdge(idx1, idx2, weigth(stop1, stop2));
+            g1.addEdge(idx1, idx2, l.getName(), weigth(stop1, stop2));
         }
 
         for(auto it1 = line0.begin(); it1 != line0.end(); ){
@@ -94,7 +94,7 @@ void STCP::addEdges(Graph &g1) {
             string s2 = (*it1);
             int idx1 = indexStops.at(s1), idx2 = indexStops.at(s2);
             Stop stop1 = stops.at(idx1), stop2 = stops.at(idx2);
-            g1.addEdge(idx1, idx2, weigth(stop1, stop2));
+            g1.addEdge(idx1, idx2, l.getName(), weigth(stop1, stop2));
         }
     }
 }
