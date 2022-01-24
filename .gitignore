@@ -7,4 +7,6 @@
 # Editor-based HTTP Client requests
 /httpRequests/
 
-/cmake-build-debug/
+.idea
+cmake-build-debug
+lib
