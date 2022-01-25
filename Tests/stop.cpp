@@ -14,3 +14,7 @@ double Stop::getLatitude() const {
 double Stop::getLongitude() const {
     return longitude;
 }
+
+string Stop::getCode() const{
+    return code;
+}

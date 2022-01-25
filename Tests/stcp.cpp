@@ -33,6 +33,7 @@ void STCP::readLines() {
 
         lines.insert(pair<string, Line>(code, stcpLine));
     }
+    file.close();
 }
 
 void STCP::readStops() {
@@ -88,9 +89,9 @@ void STCP::addEdges(Graph &g1) {
             g1.addEdge(idx1, idx2, l.getName(), weigth(stop1, stop2));
         }
 
-        for(auto it1 = line0.begin(); it1 != line0.end(); ){
+        for(auto it1 = line1.begin(); it1 != line1.end(); ){
             string s1 = (*it1++);
-            if(it1 == line0.end()) break;
+            if(it1 == line1.end()) break;
             string s2 = (*it1);
             int idx1 = indexStops.at(s1), idx2 = indexStops.at(s2);
             Stop stop1 = stops.at(idx1), stop2 = stops.at(idx2);
@@ -120,4 +121,10 @@ double STCP::haversine(double lat1, double lon1, double lat2, double lon2){
 
 double STCP::weigth(Stop &s1, Stop &s2) {
     return haversine(s1.getLatitude(), s1.getLongitude(), s2.getLatitude(), s2.getLongitude());
+}
+
+int STCP::fewerStops(Graph &g1, string s1, string s2) {
+    int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
+    cout << i1 << " " << i2 << endl;
+    return g1.bfsdistance(i1, i2);
 }

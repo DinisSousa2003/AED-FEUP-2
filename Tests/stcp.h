@@ -26,6 +26,7 @@ public:
     map<int, Stop> getStops();
     map<string, Line> getLines();
     void addEdges(Graph &g1);
+    int fewerStops(Graph &g1, string s1, string s2);
 };
 
 
