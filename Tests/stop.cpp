@@ -14,3 +14,11 @@ double Stop::getLatitude() const {
 double Stop::getLongitude() const {
     return longitude;
 }
+
+string Stop::getZone() const {
+    return zone;
+}
+
+string Stop::getName() const {
+    return name;
+}

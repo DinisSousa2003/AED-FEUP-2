@@ -62,12 +62,26 @@ void STCP::readStops() {
         stops.insert(pair<int, Stop>(stopNum, stop));
         indexStops.insert(pair<string, int>(code, stopNum));
 
+        auto z = zones.find(zone);
+        if(z == zones.end()) {
+            Zone zone1 = *(new Zone(zone));
+            zone1.addStop(stop.getName());
+            zones.insert({zone,zone1});
+        }
+        else {
+            z->second.addStop(stop.getName());
+        }
+
         stopNum++;
     }
 }
 
 map<string, Line> STCP::getLines() {
     return lines;
+}
+
+map<string, Zone> STCP::getZones() {
+    return zones;
 }
 
 map<int, Stop> STCP::getStops() {
@@ -86,6 +100,13 @@ void STCP::addEdges(Graph &g1) {
             int idx1 = indexStops.at(s1), idx2 = indexStops.at(s2);
             Stop stop1 = stops.at(idx1), stop2 = stops.at(idx2);
             g1.addEdge(idx1, idx2, l.getName(), weigth(stop1, stop2));
+
+            if(stop1.getZone() != stop2.getZone() && !zones.at(stop1.getZone()).isAdjacent(stop2.getZone())){
+                zones.at(stop1.getZone()).addAdjacent(stop2.getZone());
+                zones.at(stop2.getZone()).addAdjacent(stop1.getZone());
+            }
+
+
         }
 
         for(auto it1 = line0.begin(); it1 != line0.end(); ){
