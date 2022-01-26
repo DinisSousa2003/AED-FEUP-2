@@ -50,3 +50,40 @@ int Graph::bfsdistance(int v, int fv) {
     }
     return -1;
 }
+
+vector<int> Graph::dijkstraPath(int sNode, int endNode) {
+    for (int i=0; i<nodes.size(); i++) {
+        nodes.at(i).dist=2147483647;
+        nodes.at(i).visited=false;
+    }
+    nodes.at(sNode).dist=0;
+    nodes.at(sNode).pred=sNode;
+    int visited=0;
+    while(visited<nodes.size()) {
+        int cNode=0, lowestDist=2147483647;
+        for (int i=1; i<nodes.size(); i++) {
+            if (!nodes.at(i).visited && nodes.at(i).dist < lowestDist) {
+                lowestDist = nodes.at(i).dist;
+                cNode = i;
+            }
+        }
+        //if (cNode==0) {} //exception? will fix later
+        nodes.at(cNode).visited=true;
+        visited++;
+        if (cNode==endNode) break;
+        for (Edge edge: nodes.at(cNode).adj) {
+            if (!nodes.at(edge.dest).visited && nodes.at(cNode).dist+edge.weight<nodes.at(edge.dest).dist) {
+                nodes.at(edge.dest).dist = nodes.at(cNode).dist+edge.weight;
+                nodes.at(edge.dest).pred = cNode;
+            }
+        }
+    }
+    vector<int> path;
+    path.push_back(endNode);
+    int pNode=endNode;
+    while (pNode!=sNode) {
+        pNode=nodes.at(pNode).pred;
+        path.insert(path.begin(), pNode);
+    }
+    return path;
+}

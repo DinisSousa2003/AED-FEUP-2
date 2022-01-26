@@ -128,3 +128,12 @@ int STCP::fewerStops(Graph &g1, string s1, string s2) {
     cout << i1 << " " << i2 << endl;
     return g1.bfsdistance(i1, i2);
 }
+
+vector<string> STCP::shortestPath(Graph &g1, string s1, string s2) {
+    int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
+    cout << i1 << " " << i2 << endl;
+    vector<int> intPath = g1.dijkstraPath(i1, i2);
+    vector<string> strPath;
+    for (int i: intPath) strPath.push_back(stops.at(i).getCode());
+    return strPath;
+}
