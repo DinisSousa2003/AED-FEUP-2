@@ -102,13 +102,6 @@ vector<int> Graph::dijkstraPath(int sNode, int endNode, bool weighted) {
             }
         }
     }
-    vector<int> path;
-    path.push_back(endNode);
-    int pNode=endNode;
-    while (pNode!=sNode) {
-        pNode=nodes.at(pNode).pred;
-        path.insert(path.begin(), pNode);
-    }
-    return path;
+    return backtrace(sNode, endNode);
 }
 
