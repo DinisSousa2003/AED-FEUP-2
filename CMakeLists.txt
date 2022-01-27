@@ -10,4 +10,5 @@ add_executable(Proj_2
         Tests/line.cpp
         Tests/stop.cpp
         Tests/graph.cpp
+        Tests/zone.cpp
         main.cpp)

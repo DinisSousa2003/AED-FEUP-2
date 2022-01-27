@@ -63,12 +63,26 @@ void STCP::readStops() {
         stops.insert(pair<int, Stop>(stopNum, stop));
         indexStops.insert(pair<string, int>(code, stopNum));
 
+        auto z = zones.find(zone);
+        if(z == zones.end()) {
+            Zone zone1 = *(new Zone(zone));
+            zone1.addStop(stop.getCode());
+            zones.insert({zone,zone1});
+        }
+        else {
+            z->second.addStop(stop.getCode());
+        }
+
         stopNum++;
     }
 }
 
 map<string, Line> STCP::getLines() {
     return lines;
+}
+
+map<string, Zone> STCP::getZones() {
+    return zones;
 }
 
 map<int, Stop> STCP::getStops() {
@@ -87,6 +101,13 @@ void STCP::addEdges(Graph &g1) {
             int idx1 = indexStops.at(s1), idx2 = indexStops.at(s2);
             Stop stop1 = stops.at(idx1), stop2 = stops.at(idx2);
             g1.addEdge(idx1, idx2, l.getName(), weigth(stop1, stop2));
+
+            if(stop1.getZone() != stop2.getZone() && !zones.at(stop1.getZone()).isAdjacent(stop2.getZone())){
+                zones.at(stop1.getZone()).addAdjacent(stop2.getZone());
+                zones.at(stop2.getZone()).addAdjacent(stop1.getZone());
+            }
+
+
         }
 
         for(auto it1 = line1.begin(); it1 != line1.end(); ){
@@ -123,8 +144,28 @@ double STCP::weigth(Stop &s1, Stop &s2) {
     return haversine(s1.getLatitude(), s1.getLongitude(), s2.getLatitude(), s2.getLongitude());
 }
 
+
+void STCP::addWalkingEdges(Graph &g1, double dist) {
+    double tempDist;
+    Stop tempStop("","","",0.0,0.0);
+    int i = 0;
+    for (auto s1: stops){
+        list<string> adj = zones.at(s1.second.getZone()).getAdjacents();
+        for (auto zone:adj){
+            for(auto s2 : zones.at(zone).getStops()){
+                tempStop = stops.at(indexStops.at(s2));
+                tempDist = haversine(s1.second.getLatitude(),s1.second.getLongitude(),tempStop.getLatitude(),tempStop.getLongitude());
+                if (tempDist <= dist){
+                    g1.addEdge(s1.first,indexStops.at(s2),"walking",tempDist);
+                    cout << i++ << " Added edge : " << tempDist << endl;
+                }
+            }
+        }
+    }
+
 int STCP::fewerStops(Graph &g1, string s1, string s2) {
     int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
     cout << i1 << " " << i2 << endl;
     return g1.bfsdistance(i1, i2);
+
 }

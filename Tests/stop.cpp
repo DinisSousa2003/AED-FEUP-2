@@ -15,6 +15,14 @@ double Stop::getLongitude() const {
     return longitude;
 }
 
-string Stop::getCode() const{
+string Stop::getZone() const {
+    return zone;
+}
+
+string Stop::getName() const {
+    return name;
+}
+
+string Stop::getCode() const {
     return code;
 }
