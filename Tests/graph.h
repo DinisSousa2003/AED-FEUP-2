@@ -36,8 +36,9 @@ public:
 
     // Add edge from source to destination with a certain weight
     void addEdge(int src, int dest, string line, int weight = 1);
+    void resetNodePathingValues();
     int bfsdistance(int v, int fv);
-    vector<int> dijkstraPath(int sNode, int endNode);
+    vector<int> dijkstraPath(int sNode, int endNode, bool weighted);
     void printGraph();
 };
 

@@ -28,6 +28,7 @@ public:
     void addEdges(Graph &g1);
     int fewerStops(Graph &g1, string s1, string s2);
     vector<string> shortestPath(Graph &g1, string s1, string s2);
+    vector<string> leastStopsPath(Graph &g1, string s1, string s2);
 };
 
 
