@@ -17,6 +17,8 @@ public:
     Stop(string c, string n, string z, double lat, double lon);
     double getLatitude() const;
     double getLongitude() const;
+    string getZone() const;
+    string getName() const;
     string getCode() const;
 };
 
