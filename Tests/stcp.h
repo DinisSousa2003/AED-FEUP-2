@@ -30,7 +30,6 @@ public:
     map<string, Zone> getZones();
     void addEdges(Graph &g1);
     void addWalkingEdges(Graph &g1, double dist);
-    int fewerStops(Graph &g1, string s1, string s2);
     vector<string> shortestPath(Graph &g1, string s1, string s2);
     vector<string> leastStopsPath(Graph &g1, string s1, string s2);
 };

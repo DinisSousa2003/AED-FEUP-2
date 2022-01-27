@@ -27,20 +27,26 @@ void Graph::printGraph(){
 }
 
 void Graph::resetNodePathingValues() {
-    for (int i=0; i<nodes.size(); i++) {
+    for (int i=1; i<=n; i++) {
         nodes.at(i).dist=INT32_MAX;
         nodes.at(i).visited=false;
         nodes.at(i).pred=-1;
     }
 }
 
+vector<int> Graph::backtrace(int start, int end) {
+    vector<int> path = {end};
+    while (*path.rbegin() != start){
+        path.push_back(nodes[*path.rbegin()].pred);
+    }
+    reverse(path.begin(), path.end());
+    return path;
+}
+
 vector<int> Graph::bfsdistance(int v, int fv) {
     if(v == fv){return {v};}
 
-    for (int v=1; v<=n; v++){
-        nodes[v].visited = false;
-        nodes[v].dist = 0;
-    }
+    resetNodePathingValues();
 
     queue<int> q; // queue of unvisited nodes
     q.push(v);
@@ -61,47 +67,30 @@ vector<int> Graph::bfsdistance(int v, int fv) {
     return {};
 }
 
-vector<int> Graph::backtrace(int start, int end) {
-    vector<int> path = {end};
-    while (*path.rbegin() != start){
-        path.push_back(nodes[*path.rbegin()].pred);
-    }
-    reverse(path.begin(), path.end());
-    return path;
-}
-
-vector<int> Graph::dijkstraPath(int sNode, int endNode, bool weighted) {
+vector<int> Graph::dijkstraPath(int sNode, int endNode) {
     resetNodePathingValues();
-    nodes.at(sNode).dist=0;
-    nodes.at(sNode).pred=sNode;
-    while(true) {
-        int cNode=0, lowestDist=INT32_MAX;
-        for (int i=1; i<nodes.size(); i++) {
-            if (!nodes.at(i).visited && nodes.at(i).dist < lowestDist) {
-                lowestDist = nodes.at(i).dist;
-                cNode = i;
-            }
-        }
-        //if (cNode==0) {} //exception? will fix later
+
+    MinHeap<int, int> minHeap = MinHeap<int, int>(this->n, -1);
+
+    for(int i = 1; i <= n; i++){
+        minHeap.insert(i, nodes[i].dist);
+    }
+
+    minHeap.decreaseKey(sNode, nodes[sNode].dist = 0);
+
+    while(minHeap.getSize() > 0) {
+        int cNode = minHeap.removeMin();
         nodes.at(cNode).visited=true;
-        if (cNode==endNode) break;
-        if (weighted) {
-            for (Edge edge: nodes.at(cNode).adj) {
-                if (!nodes.at(edge.dest).visited && nodes.at(cNode).dist + edge.weight < nodes.at(edge.dest).dist) {
-                    nodes.at(edge.dest).dist = nodes.at(cNode).dist + edge.weight;
-                    nodes.at(edge.dest).pred = cNode;
-                }
-            }
-        }
-        else {
-            for (Edge edge: nodes.at(cNode).adj) {
-                if (!nodes.at(edge.dest).visited && nodes.at(cNode).dist + 1 < nodes.at(edge.dest).dist) {
-                    nodes.at(edge.dest).dist = nodes.at(cNode).dist + 1;
-                    nodes.at(edge.dest).pred = cNode;
-                }
+
+        //if (cNode==endNode) break;
+        for (Edge edge: nodes.at(cNode).adj) {
+            if (!nodes[edge.dest].visited && nodes.at(cNode).dist + edge.weight < nodes.at(edge.dest).dist) {
+                minHeap.decreaseKey(edge.dest, nodes[edge.dest].dist = nodes[cNode].dist + edge.weight);
+                nodes[edge.dest].pred = cNode;
             }
         }
     }
+
     return backtrace(sNode, endNode);
 }
 

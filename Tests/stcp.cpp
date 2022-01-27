@@ -8,34 +8,6 @@
 #include <sstream>
 #include <cmath>
 
-void STCP::readLines() {
-    ifstream file;
-
-    file.open("..//Tests//dataset//lines.csv");
-
-    if(!file.is_open()){
-        cerr << "Unable to open file" << endl;
-    }
-
-    string line, code, name;
-    //remove header
-    getline(file, line);
-
-    while(getline(file, line)){
-        stringstream lineSS(line);
-        getline(lineSS, code, ',');
-        getline(lineSS, name);
-
-        Line stcpLine(code, name);
-
-        stcpLine.addStops('0');
-        stcpLine.addStops('1');
-
-        lines.insert(pair<string, Line>(code, stcpLine));
-    }
-    file.close();
-}
-
 void STCP::readStops() {
     ifstream file;
 
@@ -75,6 +47,36 @@ void STCP::readStops() {
 
         stopNum++;
     }
+}
+
+
+
+void STCP::readLines() {
+    ifstream file;
+
+    file.open("..//Tests//dataset//lines.csv");
+
+    if(!file.is_open()){
+        cerr << "Unable to open file" << endl;
+    }
+
+    string line, code, name;
+    //remove header
+    getline(file, line);
+
+    while(getline(file, line)){
+        stringstream lineSS(line);
+        getline(lineSS, code, ',');
+        getline(lineSS, name);
+
+        Line stcpLine(code, name);
+
+        stcpLine.addStops('0');
+        stcpLine.addStops('1');
+
+        lines.insert(pair<string, Line>(code, stcpLine));
+    }
+    file.close();
 }
 
 map<string, Line> STCP::getLines() {
@@ -165,20 +167,10 @@ void STCP::addWalkingEdges(Graph &g1, double dist) {
     }
 }
 
-int STCP::fewerStops(Graph &g1, string s1, string s2) {
-    int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
-    cout << i1 << " " << i2 << endl;
-    vector<int> path =  g1.bfsdistance(i1, i2);
-    for(auto it = path.begin(); it != path.end(); it++)
-        cout << stops.at(*it).getCode() << " ";
-    cout << endl;
-    return path.size() - 1; //distance = number of stops - 1
-}
-
 vector<string> STCP::shortestPath(Graph &g1, string s1, string s2) {
     int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
     cout << i1 << " " << i2 << endl;
-    vector<int> intPath = g1.dijkstraPath(i1, i2, true);
+    vector<int> intPath = g1.dijkstraPath(i1, i2);
     vector<string> strPath;
     for (int i: intPath) strPath.push_back(stops.at(i).getCode());
     return strPath;
@@ -187,7 +179,7 @@ vector<string> STCP::shortestPath(Graph &g1, string s1, string s2) {
 vector<string> STCP::leastStopsPath(Graph &g1, string s1, string s2) {
     int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
     cout << i1 << " " << i2 << endl;
-    vector<int> intPath = g1.dijkstraPath(i1, i2, false);
+    vector<int> intPath = g1.bfsdistance(i1, i2);
     vector<string> strPath;
     for (int i: intPath) strPath.push_back(stops.at(i).getCode());
     return strPath;

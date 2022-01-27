@@ -17,11 +17,13 @@ int main() {
         for (auto a:z.second.getAdjacents()) cout << "Adjacent" << a << endl;
     }*/
     g1.printGraph();
-    cout << stcp.fewerStops(g1, "5OTR2", "PCUA2") << endl;
 
     //Test for shortest path between 2 stops
     cout << "Shortest Path\n";
     vector<string> strPath = stcp.shortestPath(g1, "5OTR2", "PCUA2");
+    for (string str1: strPath) cout << str1 << " ";
+    cout << endl;
+    strPath = stcp.shortestPath(g1, "CQ8", "MLAM");
     for (string str1: strPath) cout << str1 << " ";
     cout << endl;
 
@@ -29,6 +31,9 @@ int main() {
     cout << "Least Stops Path\n";
     vector<string> strPath2 = stcp.leastStopsPath(g1, "5OTR2", "PCUA2");
     for (string str2: strPath2) cout << str2 << " ";
+    cout << endl;
+    strPath = stcp.leastStopsPath(g1, "CQ8", "MLAM");
+    for (string str1: strPath) cout << str1 << " ";
     cout << endl;
 
     return 0;

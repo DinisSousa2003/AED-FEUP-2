@@ -30,17 +30,20 @@ class Graph {
     bool hasDir;        // false: undirect; true: directed
     vector<Node> nodes; // The list of nodes being represented
 
+
+private:
+    void resetNodePathingValues();
+    vector<int> backtrace(int start, int end);
+
 public:
     // Constructor: nr nodes and direction (default: undirected)
     Graph(int nodes, bool dir = false);
 
     // Add edge from source to destination with a certain weight
     void addEdge(int src, int dest, string line, int weight = 1);
-    void resetNodePathingValues();
     vector<int> bfsdistance(int v, int fv);
-    vector<int> dijkstraPath(int sNode, int endNode, bool weighted);
+    vector<int> dijkstraPath(int sNode, int endNode);
     void printGraph();
-    vector<int> backtrace(int start, int end);
 };
 
 #endif
