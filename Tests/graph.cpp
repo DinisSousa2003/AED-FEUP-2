@@ -3,6 +3,7 @@
 
 #include "graph.h"
 #include <queue>
+#include <algorithm>
 
 // Constructor: nr nodes and direction (default: undirected)
 Graph::Graph(int num, bool dir) : n(num), hasDir(dir), nodes(num+1) {
@@ -25,8 +26,8 @@ void Graph::printGraph(){
     }
 }
 
-int Graph::bfsdistance(int v, int fv) {
-    if(v == fv){return 0;}
+vector<int> Graph::bfsdistance(int v, int fv) {
+    if(v == fv){return {v};}
 
     for (int v=1; v<=n; v++){
         nodes[v].visited = false;
@@ -43,10 +44,20 @@ int Graph::bfsdistance(int v, int fv) {
             if (!nodes[w].visited) {
                 q.push(w);
                 nodes[w].visited = true;
+                nodes[w].pred = u;
                 nodes[w].dist = nodes[u].dist + 1;
-                if(w == fv){return nodes[w].dist;}
+                if(w == fv){return backtrace(v, fv);}
             }
         }
     }
-    return -1;
+    return {};
+}
+
+vector<int> Graph::backtrace(int start, int end) {
+    vector<int> path = {end};
+    while (*path.rbegin() != start){
+        path.push_back(nodes[*path.rbegin()].pred);
+    }
+    reverse(path.begin(), path.end());
+    return path;
 }

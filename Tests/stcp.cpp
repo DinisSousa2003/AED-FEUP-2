@@ -126,5 +126,9 @@ double STCP::weigth(Stop &s1, Stop &s2) {
 int STCP::fewerStops(Graph &g1, string s1, string s2) {
     int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
     cout << i1 << " " << i2 << endl;
-    return g1.bfsdistance(i1, i2);
+    vector<int> path =  g1.bfsdistance(i1, i2);
+    for(auto it = path.begin(); it != path.end(); it++)
+        cout << stops.at(*it).getCode() << " ";
+    cout << endl;
+    return path.size() - 1; //distance = number of stops - 1
 }
