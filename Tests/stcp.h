@@ -29,7 +29,7 @@ public:
     map<string, Line> getLines();
     map<string, Zone> getZones();
     void addEdges(Graph &g1);
-    void addWalkingEdges(double dist);
+    void addWalkingEdges(Graph &g1, double dist);
 };
 
 

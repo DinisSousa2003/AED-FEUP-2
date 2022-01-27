@@ -65,11 +65,11 @@ void STCP::readStops() {
         auto z = zones.find(zone);
         if(z == zones.end()) {
             Zone zone1 = *(new Zone(zone));
-            zone1.addStop(stop.getName());
+            zone1.addStop(stop.getCode());
             zones.insert({zone,zone1});
         }
         else {
-            z->second.addStop(stop.getName());
+            z->second.addStop(stop.getCode());
         }
 
         stopNum++;
@@ -141,4 +141,23 @@ double STCP::haversine(double lat1, double lon1, double lat2, double lon2){
 
 double STCP::weigth(Stop &s1, Stop &s2) {
     return haversine(s1.getLatitude(), s1.getLongitude(), s2.getLatitude(), s2.getLongitude());
+}
+
+void STCP::addWalkingEdges(Graph &g1, double dist) {
+    double tempDist;
+    Stop tempStop("","","",0.0,0.0);
+    int i = 0;
+    for (auto s1: stops){
+        list<string> adj = zones.at(s1.second.getZone()).getAdjacents();
+        for (auto zone:adj){
+            for(auto s2 : zones.at(zone).getStops()){
+                tempStop = stops.at(indexStops.at(s2));
+                tempDist = haversine(s1.second.getLatitude(),s1.second.getLongitude(),tempStop.getLatitude(),tempStop.getLongitude());
+                if (tempDist <= dist){
+                    g1.addEdge(s1.first,indexStops.at(s2),"walking",tempDist);
+                    cout << i++ << " Added edge : " << tempDist << endl;
+                }
+            }
+        }
+    }
 }

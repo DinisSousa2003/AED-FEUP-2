@@ -22,3 +22,7 @@ string Stop::getZone() const {
 string Stop::getName() const {
     return name;
 }
+
+string Stop::getCode() const {
+    return code;
+}

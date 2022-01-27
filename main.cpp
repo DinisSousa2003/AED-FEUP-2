@@ -8,6 +8,7 @@ int main() {
     stcp.readLines();
     Graph g1(stcp.getStops().size() + 1, true);
     stcp.addEdges(g1);
+    stcp.addWalkingEdges(g1,0.3);
     for (auto s:stcp.getStops()) cout << "stop" << endl;
     for (auto l:stcp.getLines()) cout << "line" << endl;
     for (auto z:stcp.getZones()) {

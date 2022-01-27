@@ -19,6 +19,7 @@ public:
     double getLongitude() const;
     string getZone() const;
     string getName() const;
+    string getCode() const;
 };
 
 
