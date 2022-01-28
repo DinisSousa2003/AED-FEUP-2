@@ -41,6 +41,7 @@ public:
     void removeWalkingEdges();
     vector<int> bfsdistance(int v, int fv);
     void printGraph();
+    void printLines();
     vector<int> backtrace(int start, int end);
 };
 

@@ -11,16 +11,29 @@ Graph::Graph(int num, bool dir) : n(num), hasDir(dir), nodes(num+1) {
 
 // Add edge from source to destination with a certain weight
 void Graph::addEdge(int src, int dest, string line, int weight) {
-    if (src<1 || src>n || dest<1 || dest>n) return;
+    if (src<1 || src>nodes.size() || dest<1 || dest>nodes.size()) return;
     nodes[src].adj.push_back({dest, weight, line});
     if (!hasDir) nodes[dest].adj.push_back({src, weight, line});
 }
 
 void Graph::printGraph(){
-    for(int v = 1; v <=n; v++){
+    for(int v = 1; v < nodes.size(); v++){
         cout << v << " : ";
         for(auto e : nodes[v].adj){
             cout << e.dest << " ";
+        }
+        cout << endl;
+    }
+}
+
+void Graph::printLines(){
+    for(int v = 1; v <=n; v++){
+        cout << v << " : ";
+        for(auto e : nodes[v].adj){
+            if (e.line == "Walking") {
+                cout << "Node " << v << " Edge " << e.line;
+                cout << endl;
+            }
         }
         cout << endl;
     }
@@ -74,10 +87,11 @@ void Graph::removeTemporaryNodes() {
 }
 
 void Graph::removeWalkingEdges() {
-    for (auto n:nodes) {
-        list<Edge>::iterator it = n.adj.begin();
+    int i = 0;
+    for (auto &n:nodes) {
+        auto it = n.adj.begin();
         while (it != n.adj.end()){
-            if (it->line == "Walking") n.adj.erase(it);
+            if (it->line == "Walking") it = n.adj.erase(it);
             else it++;
         }
     }

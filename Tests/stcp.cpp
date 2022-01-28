@@ -148,6 +148,7 @@ double STCP::weigth(Stop &s1, Stop &s2) {
 void STCP::addWalkingEdges(Graph &g1, double dist) {
     if(dist == currentWalkingDist) return;
     g1.removeWalkingEdges();
+    currentWalkingDist = dist;
     double tempDist;
     Stop tempStop("", "", "", 0.0, 0.0);
     int i = 0;
@@ -159,8 +160,7 @@ void STCP::addWalkingEdges(Graph &g1, double dist) {
                 tempDist = haversine(s1.second.getLatitude(), s1.second.getLongitude(), tempStop.getLatitude(),
                                      tempStop.getLongitude());
                 if (tempDist <= dist) {
-                    g1.addEdge(s1.first, indexStops.at(s2), "walking", tempDist);
-                    cout << i++ << " Added edge : " << tempDist << endl;
+                    g1.addEdge(s1.first, indexStops.at(s2), "Walking", tempDist);
                 }
             }
         }
@@ -387,7 +387,9 @@ void STCP::addTemporaryStops(Graph &g1, Stop &start, Stop &destiny) {
     stops.insert(pair<int, Stop>(stops.size(), start));
     indexStops.insert(pair<string, int>("Destiny", stops.size()));
     stops.insert(pair<int, Stop>(stops.size(),destiny));
+    g1.printGraph();
     g1.addTemporatyNodes();
+    g1.printGraph();
 
 }
 
@@ -397,4 +399,5 @@ void STCP::removeTemporaryStops(Graph &g1) {
     indexStops.erase("Start");
     indexStops.erase("Destiny");
     g1.removeTemporaryNodes();
+    g1.printGraph();
 }
