@@ -21,7 +21,7 @@ void STCP::readStops() {
     //remove header
     getline(file, line);
 
-    int stopNum = 1;
+    int stopNum = 1, zoneNum = 0;
     while(getline(file, line)){
         stringstream lineSS(line);
         getline(lineSS, code, ',');
@@ -35,14 +35,16 @@ void STCP::readStops() {
         stops.insert(pair<int, Stop>(stopNum, stop));
         indexStops.insert(pair<string, int>(code, stopNum));
 
-        auto z = zones.find(zone);
-        if(z == zones.end()) {
+        auto z = indexZones.find(zone);
+        if(z == indexZones.end()) {
             Zone zone1 = *(new Zone(zone));
             zone1.addStop(stop.getCode());
-            zones.insert({zone,zone1});
+            zones.insert({zoneNum,zone1});
+            indexZones.insert(pair<string, int>(zone, zoneNum));
+            zoneNum++;
         }
         else {
-            z->second.addStop(stop.getCode());
+            zones.at(z->second).addStop(stop.getCode());
         }
 
         stopNum++;
@@ -83,12 +85,18 @@ map<string, Line> STCP::getLines() {
     return lines;
 }
 
-map<string, Zone> STCP::getZones() {
+map<int, Zone> STCP::getZones() {
     return zones;
 }
 
 map<int, Stop> STCP::getStops() {
     return stops;
+}
+
+void STCP::addZonesToGraph(Graph &g1) {
+    for (auto & stop1 : stops){
+        g1.addZoneToNode(stop1.first, indexZones.at(stop1.second.getZone()));
+    }
 }
 
 void STCP::addEdges(Graph &g1) {
@@ -104,9 +112,9 @@ void STCP::addEdges(Graph &g1) {
             Stop stop1 = stops.at(idx1), stop2 = stops.at(idx2);
             g1.addEdge(idx1, idx2, l.getName(), weigth(stop1, stop2));
 
-            if(stop1.getZone() != stop2.getZone() && !zones.at(stop1.getZone()).isAdjacent(stop2.getZone())){
-                zones.at(stop1.getZone()).addAdjacent(stop2.getZone());
-                zones.at(stop2.getZone()).addAdjacent(stop1.getZone());
+            if(stop1.getZone() != stop2.getZone() && !zones.at(indexZones.at(stop1.getZone())).isAdjacent(stop2.getZone())){
+                zones.at(indexZones.at(stop1.getZone())).addAdjacent(stop2.getZone());
+                zones.at(indexZones.at(stop1.getZone())).addAdjacent(stop1.getZone());
             }
 
 
@@ -152,9 +160,9 @@ void STCP::addWalkingEdges(Graph &g1, double dist) {
     Stop tempStop("", "", "", 0.0, 0.0);
     int i = 0;
     for (auto s1: stops) {
-        list<string> adj = zones.at(s1.second.getZone()).getAdjacents();
+        list<string> adj = zones.at(indexZones.at(s1.second.getZone())).getAdjacents();
         for (auto zone: adj) {
-            for (auto s2: zones.at(zone).getStops()) {
+            for (auto s2: zones.at(indexZones.at(zone)).getStops()) {
                 tempStop = stops.at(indexStops.at(s2));
                 tempDist = haversine(s1.second.getLatitude(), s1.second.getLongitude(), tempStop.getLatitude(),
                                      tempStop.getLongitude());

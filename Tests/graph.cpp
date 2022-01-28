@@ -16,6 +16,14 @@ void Graph::addEdge(int src, int dest, string line, int weight) {
     if (!hasDir) nodes[dest].adj.push_back({src, weight, line});
 }
 
+void Graph::addZone(int zoneNum) {
+    zones.
+}
+
+void Graph::addZoneToNode(int nodeNum, int zoneNum) {
+    nodes.at(nodeNum).zone=zoneNum;
+}
+
 void Graph::printGraph(){
     for(int v = 1; v <=n; v++){
         cout << v << " : ";
@@ -29,6 +37,7 @@ void Graph::printGraph(){
 void Graph::resetNodePathingValues() {
     for (int i=1; i<=n; i++) {
         nodes.at(i).dist=INT32_MAX;
+        nodes.at(i).zoneDist=INT32_MAX;
         nodes.at(i).visited=false;
         nodes.at(i).pred=-1;
     }
@@ -93,4 +102,29 @@ vector<int> Graph::dijkstraPath(int sNode, int endNode) {
 
     return backtrace(sNode, endNode);
 }
+
+vector<int> Graph::zoneReducingDijkstraPath(int sNode, int endNode) {
+    resetNodePathingValues();
+
+    MinHeap<int, pair<int, int>> minHeap = MinHeap<int, pair<int, int>>(n, -1);
+
+    for(int i = 1; i <= n; i++){
+        minHeap.insert(i, pair<int, int>(nodes[i].zoneDist, nodes[i].dist));
+    }
+
+    minHeap.decreaseKey(sNode, pair<int, int>(nodes[sNode].zoneDist, nodes[sNode].dist) = pair<int, int>(0, 0));
+
+    while(minHeap.getSize()>0) {
+        int cNode = minHeap.removeMin();
+        nodes.at(cNode).visited=true;
+
+        //if (cNode==endNode) break;
+        for (Edge edge: nodes.at(cNode).adj) {
+            if (!nodes[edge.dest].visited && )
+        }
+    }
+
+    return backtrace(sNode, endNode);
+}
+
 

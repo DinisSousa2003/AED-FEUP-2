@@ -17,8 +17,9 @@ class STCP {
 private:
     map<int, Stop> stops;
     map<string, Line> lines;
-    map<string, Zone> zones;
-    map<string , int> indexStops;
+    map<int, Zone> zones;
+    map<string, int> indexStops;
+    map<string, int> indexZones;
     static double haversine(double lat1, double lon1, double lat2, double lon2);
     double weigth(Stop &s1, Stop &s2);
 
@@ -27,7 +28,8 @@ public:
     void readLines();
     map<int, Stop> getStops();
     map<string, Line> getLines();
-    map<string, Zone> getZones();
+    map<int, Zone> getZones();
+    void addZonesToGraph(Graph &g1);
     void addEdges(Graph &g1);
     void addWalkingEdges(Graph &g1, double dist);
     vector<string> shortestPath(Graph &g1, string s1, string s2);

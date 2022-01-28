@@ -1,5 +1,6 @@
 // AED 2021/2022 - Aula Pratica 11
 // Pedro Ribeiro (DCC/FCUP) [17/01/2022]
+// Modified for use in project
 
 #ifndef _MINHEAP_H_
 #define _MINHEAP_H_
@@ -119,6 +120,10 @@ K MinHeap<K,V>::removeMin() {
     a[1] = a[size--];
     downHeap(1);
     return min;
+}
+
+bool operator<(const pair<int, int> &lPair, const pair<int, int> &rPair){
+    return lPair.first<rPair.first || (rPair.first == lPair.first && lPair.second < rPair.second);
 }
 
 #endif
