@@ -102,7 +102,7 @@ void STCP::addEdges(Graph &g1) {
             string s2 = (*it0);
             int idx1 = indexStops.at(s1), idx2 = indexStops.at(s2);
             Stop stop1 = stops.at(idx1), stop2 = stops.at(idx2);
-            g1.addEdge(idx1, idx2, l.getName(), weigth(stop1, stop2));
+            g1.addEdge(idx1, idx2, l.getCode(), weigth(stop1, stop2));
 
             if(stop1.getZone() != stop2.getZone() && !zones.at(stop1.getZone()).isAdjacent(stop2.getZone())){
                 zones.at(stop1.getZone()).addAdjacent(stop2.getZone());
@@ -118,7 +118,7 @@ void STCP::addEdges(Graph &g1) {
             string s2 = (*it1);
             int idx1 = indexStops.at(s1), idx2 = indexStops.at(s2);
             Stop stop1 = stops.at(idx1), stop2 = stops.at(idx2);
-            g1.addEdge(idx1, idx2, l.getName(), weigth(stop1, stop2));
+            g1.addEdge(idx1, idx2, l.getCode(), weigth(stop1, stop2));
         }
     }
 }
@@ -179,7 +179,16 @@ vector<string> STCP::shortestPath(Graph &g1, string s1, string s2) {
 vector<string> STCP::leastStopsPath(Graph &g1, string s1, string s2) {
     int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
     cout << i1 << " " << i2 << endl;
-    vector<int> intPath = g1.bfsdistance(i1, i2);
+    vector<int> intPath = g1.bfsstops(i1, i2);
+    vector<string> strPath;
+    for (int i: intPath) strPath.push_back(stops.at(i).getCode());
+    return strPath;
+}
+
+vector<string> STCP::leastLinesChanged(Graph &g1, string s1, string s2) {
+    int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
+    cout << i1 << " " << i2 << endl;
+    vector<int> intPath = g1.dijkstraPathLines(i1, i2);
     vector<string> strPath;
     for (int i: intPath) strPath.push_back(stops.at(i).getCode());
     return strPath;

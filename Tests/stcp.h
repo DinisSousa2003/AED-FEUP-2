@@ -32,6 +32,7 @@ public:
     void addWalkingEdges(Graph &g1, double dist);
     vector<string> shortestPath(Graph &g1, string s1, string s2);
     vector<string> leastStopsPath(Graph &g1, string s1, string s2);
+    vector<string> leastLinesChanged(Graph &g1, string s1, string s2);
 };
 
 

@@ -38,12 +38,14 @@ vector<int> Graph::backtrace(int start, int end) {
     vector<int> path = {end};
     while (*path.rbegin() != start){
         path.push_back(nodes[*path.rbegin()].pred);
+        cout << nodes[*path.rbegin()].predline << " ";
     }
+    cout << endl;
     reverse(path.begin(), path.end());
     return path;
 }
 
-vector<int> Graph::bfsdistance(int v, int fv) {
+vector<int> Graph::bfsstops(int v, int fv) {
     if(v == fv){return {v};}
 
     resetNodePathingValues();
@@ -59,6 +61,7 @@ vector<int> Graph::bfsdistance(int v, int fv) {
                 q.push(w);
                 nodes[w].visited = true;
                 nodes[w].pred = u;
+                nodes[w].predline = e.line;
                 nodes[w].dist = nodes[u].dist + 1;
                 if(w == fv){return backtrace(v, fv);}
             }
@@ -82,11 +85,11 @@ vector<int> Graph::dijkstraPath(int sNode, int endNode) {
         int cNode = minHeap.removeMin();
         nodes.at(cNode).visited=true;
 
-        //if (cNode==endNode) break;
         for (Edge edge: nodes.at(cNode).adj) {
             if (!nodes[edge.dest].visited && nodes.at(cNode).dist + edge.weight < nodes.at(edge.dest).dist) {
                 minHeap.decreaseKey(edge.dest, nodes[edge.dest].dist = nodes[cNode].dist + edge.weight);
                 nodes[edge.dest].pred = cNode;
+                nodes[edge.dest].predline = edge.line;
             }
         }
     }
@@ -94,3 +97,30 @@ vector<int> Graph::dijkstraPath(int sNode, int endNode) {
     return backtrace(sNode, endNode);
 }
 
+vector<int> Graph::dijkstraPathLines(int sNode, int endNode) {
+    resetNodePathingValues();
+
+    MinHeap<int, int> minHeap = MinHeap<int, int>(this->n, -1);
+
+    for(int i = 1; i <= n; i++){
+        minHeap.insert(i, nodes[i].dist);
+        nodes[i].predline = "-1";
+    }
+
+    minHeap.decreaseKey(sNode, nodes[sNode].dist = 0);
+
+    while(minHeap.getSize() > 0) {
+        int cNode = minHeap.removeMin();
+        nodes.at(cNode).visited=true;
+
+        for (Edge edge: nodes.at(cNode).adj) {
+            int changeLine = (nodes[cNode].predline == edge.line) ? 0 : 1;
+            if (!nodes[edge.dest].visited && nodes[cNode].dist + changeLine < nodes[edge.dest].dist) {
+                minHeap.decreaseKey(edge.dest, nodes[edge.dest].dist = nodes[cNode].dist + changeLine);
+                nodes[edge.dest].pred = cNode;
+                nodes[edge.dest].predline = edge.line;
+            }
+        }
+    }
+    return backtrace(sNode, endNode);
+}

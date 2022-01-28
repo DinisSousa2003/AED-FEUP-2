@@ -29,10 +29,19 @@ int main() {
 
     //Test for least amount of stops between 2 stops
     cout << "Least Stops Path\n";
-    vector<string> strPath2 = stcp.leastStopsPath(g1, "5OTR2", "PCUA2");
-    for (string str2: strPath2) cout << str2 << " ";
+    strPath = stcp.leastStopsPath(g1, "5OTR2", "PCUA2");
+    for (string str2: strPath) cout << str2 << " ";
     cout << endl;
     strPath = stcp.leastStopsPath(g1, "CQ8", "MLAM");
+    for (string str1: strPath) cout << str1 << " ";
+    cout << endl;
+
+    //Test for fewer linechanges between 2 stops
+    cout << "Least lines changed Path\n";
+    strPath = stcp.leastLinesChanged(g1, "5OTR2", "PCUA2");
+    for (string str1: strPath) cout << str1 << " ";
+    cout << endl;
+    strPath = stcp.leastLinesChanged(g1, "CQ8", "MLAM");
     for (string str1: strPath) cout << str1 << " ";
     cout << endl;
 

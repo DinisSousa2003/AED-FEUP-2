@@ -23,7 +23,7 @@ class Graph {
         int dist;
         int pred;
         bool visited;
-        string name;
+        string predline;
     };
 
     int n;              // Graph size (vertices are numbered from 1 to n)
@@ -41,8 +41,9 @@ public:
 
     // Add edge from source to destination with a certain weight
     void addEdge(int src, int dest, string line, int weight = 1);
-    vector<int> bfsdistance(int v, int fv);
+    vector<int> bfsstops(int v, int fv);
     vector<int> dijkstraPath(int sNode, int endNode);
+    vector<int> dijkstraPathLines(int sNode, int endNode);
     void printGraph();
 };
 
