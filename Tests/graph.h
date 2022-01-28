@@ -48,10 +48,10 @@ public:
     void printGraph();
     void printLines();
     vector<int> backtrace(int start, int end);
-    vector<int> bfsstops(int v, int fv, vector<string> &stops);
-    vector<int> dijkstraPath(int sNode, int endNode, vector<string> &stops);
-    vector<int> dijkstraPathLines(int sNode, int endNode, vector<string> &stops);
-    void printGraph();
+    vector<int> bfsstops(int v, int fv, vector<string> &lines);
+    vector<int> dijkstraPath(int sNode, int endNode, vector<string> &lines);
+    vector<int> dijkstraPathLines(int sNode, int endNode, vector<string> &lines);
+    int prim(int sNode);
 };
 
 #endif

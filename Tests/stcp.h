@@ -20,6 +20,14 @@ private:
     map<string, Zone> zones;
     map<string , int> indexStops;
     double currentWalkingDist = 0.0;
+    /*!
+     * Used to determine the distance between two locations based on their coordinates
+     * @param lat1 Latitude of first location
+     * @param lon1 Longitude of first location
+     * @param lat2 Latitude of second location
+     * @param lon2 Longitude of second location
+     * @return
+     */
     static double haversine(double lat1, double lon1, double lat2, double lon2);
     double weigth(Stop &s1, Stop &s2);
     /*!
@@ -55,16 +63,16 @@ public:
     map<string, Zone> getZones();
     void addTemporaryStops(Graph &g1, Stop &start, Stop &destiny);
     void removeTemporaryStops(Graph &g1);
-    void addEdges(Graph &g1);
     void addEdges(Graph &g1, bool night);
     void addWalkingEdges(Graph &g1, double dist);
     vector<string> shortestPath(Graph &g1, string s1, string s2);
     vector<string> leastStopsPath(Graph &g1, string s1, string s2);
     vector<string> leastLinesChanged(Graph &g1, string s1, string s2);
+    void printPath(vector<string> &stops,vector<string> &lines);
     /*!
      * Starts the interface
      */
-    void runUserInterface(Graph &g1);
+    void runUserInterface(Graph &g1, Graph &g2);
 
 };
 

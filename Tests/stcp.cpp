@@ -168,27 +168,13 @@ void STCP::addWalkingEdges(Graph &g1, double dist) {
     }
 }
 
-
-int STCP::fewerStops(Graph &g1, string s1, string s2) {
-    int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
-    cout << i1 << " " << i2 << endl;
-    vector<string> lines;
-    vector<int> intPath = g1.dijkstraPath(i1, i2, lines);
-    vector<string> strPath;
-    for (int i: intPath) strPath.push_back(stops.at(i).getCode());
-    for (auto &l : lines) cout << l << " ";
-    cout << endl;
-    return path.size() - 1; //distance = number of stops - 1
-}
-
 vector<string> STCP::shortestPath(Graph &g1, string s1, string s2) {
     int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
-    cout << i1 << " " << i2 << endl;
     vector<string> lines;
     vector<int> intPath = g1.dijkstraPath(i1, i2, lines);
     vector<string> strPath;
     for (int i: intPath) strPath.push_back(stops.at(i).getCode());
-    for (auto &l : lines) cout << l << " ";
+    printPath(strPath,lines);
     cout << endl;
     return strPath;
 }
@@ -268,20 +254,35 @@ bool STCP::readDouble(double &doubleToStore) const {
     return true;
 }
 
-void STCP::runUserInterface(Graph &g1) {
+void STCP::runUserInterface(Graph &g1, Graph &g2) {
     cout << "Start" << endl;
     int input;
     bool stayInMenu = true;
     int walkingMetro;
     double walkingDist;
     string start = "Start",destiny = "Destiny";
-    char next;
+    char next, timeOfDay;
+    Graph* g;
     do {
+
         cout << "Mensagem welcoming hihihi" << endl;
+        do{
+            cout << "Will you be travelling by day or by night?(d/n) " << endl;
+            readChar(timeOfDay);
+            if (timeOfDay == 'd') g = &g1;
+            else if(timeOfDay == 'n') g = &g2;
+            else {
+                cout << "Invalid Input";
+                stayInMenu = false;
+            }
+        } while (!stayInMenu);
+
+
+
+
         cout << "How do you prefer to state the start and destiny of the trip?" << endl;
         cout << "1. Coordinates" << endl;
         cout << "2. Stop code" << endl;
-        cout << "3. Stop name" << endl;   //tinha de ser o nome exato... é melhor n?
         cout << "0. Exit" << endl;
         cout << "Type 'q' or 'Q' at any menu to leave" << endl;
         stayInMenu = readInt(input);
@@ -291,7 +292,7 @@ void STCP::runUserInterface(Graph &g1) {
                 case 0:
                     return;
                 case 1:
-                    stayInMenu = coordenadasMenu(g1);
+                    stayInMenu = coordenadasMenu(*g);
                     break;
                 case 2:
                     stayInMenu = codigoMenu(start, destiny);
@@ -306,7 +307,7 @@ void STCP::runUserInterface(Graph &g1) {
         cout << "What's the maximum distance you would be willing to walk?(in meters) ";
         if(!readInt(walkingMetro)) continue;
         walkingDist = (double) walkingMetro / 1000.0;
-        addWalkingEdges(g1,walkingDist);
+        addWalkingEdges(*g,walkingDist);
 
 
         cout << "What's more important? " << endl;
@@ -322,13 +323,13 @@ void STCP::runUserInterface(Graph &g1) {
                 stayInMenu = false;
                 break;
             case 1:
-
+                shortestPath(*g,start,destiny);
                 break;
             case 2:
-                cout << fewerStops(g1, start, destiny);
+                leastStopsPath(*g,start,destiny);
                 break;
             case 3:
-
+                leastLinesChanged(*g,start,destiny);
                 break;
             case 4:
 
@@ -337,7 +338,7 @@ void STCP::runUserInterface(Graph &g1) {
                 cout << "Invalid Input";
                 break;
         }
-        if(start == "Start") removeTemporaryStops(g1);
+        if(start == "Start") removeTemporaryStops(*g);
         cout << "Next trip?(y/n) ";
         stayInMenu = readChar(next);
         if(next == 'n') break;
@@ -420,25 +421,39 @@ void STCP::removeTemporaryStops(Graph &g1) {
 
 vector<string> STCP::leastStopsPath(Graph &g1, string s1, string s2) {
     int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
-    cout << i1 << " " << i2 << endl;
     vector<string> lines;
     vector<int> intPath = g1.bfsstops(i1, i2, lines);
     vector<string> strPath;
     for (int i: intPath) strPath.push_back(stops.at(i).getCode());
-    for (auto &l : lines) cout << l << " ";
+    printPath(strPath,lines);
     cout << endl;
     return strPath;
 }
 
 vector<string> STCP::leastLinesChanged(Graph &g1, string s1, string s2) {
     int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
-    cout << i1 << " " << i2 << endl;
     vector<string> lines;
     vector<int> intPath = g1.dijkstraPathLines(i1, i2, lines);
     vector<string> strPath;
     for (int i: intPath) strPath.push_back(stops.at(i).getCode());
-    for (auto &l : lines) cout << l << " ";
+    printPath(strPath,lines);
     cout << endl;
     return strPath;
 }
 
+void STCP::printPath(vector<string> &stops,vector<string> &lines) {
+    if(stops.empty()) {
+        cout << "No path leads to the wanted destiny." << endl;
+        return;
+    }
+    string currentline = "...";
+    cout << "Start at: " << stops[0];
+    for (int i = 0; i < lines.size(); i++){
+        if (lines[i] != currentline) {
+            currentline = lines[i];
+            cout << endl << currentline << " : ";
+        } else cout << " , ";
+        cout << stops[i+1];
+    }
+    cout << endl << "Finish" << endl;
+}

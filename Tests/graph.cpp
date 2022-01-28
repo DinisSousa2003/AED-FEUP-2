@@ -42,30 +42,32 @@ void Graph::printLines(){
 }
 
 vector<int> Graph::bfsdistance(int v, int fv) {
-    if(v == fv){return {v};}
+    if(v == fv) return {v};
+}
 
 void Graph::resetNodePathingValues() {
     for (int i=1; i<=n; i++) {
         nodes.at(i).dist=INT32_MAX;
         nodes.at(i).visited=false;
         nodes.at(i).pred=-1;
+        nodes.at(i).predline = "-1";
     }
 }
 
 
-vector<int> Graph::backtrace(int start, int end, vector<string> &stops) {
+vector<int> Graph::backtrace(int start, int end, vector<string> &lines) {
     if(nodes[end].pred == -1){return {};}
     vector<int> path = {end};
     while (*path.rbegin() != start){
+        lines.push_back(nodes[*path.rbegin()].predline);
         path.push_back(nodes[*path.rbegin()].pred);
-        stops.push_back(nodes[*path.rbegin()].predline);
     }
     reverse(path.begin(), path.end());
-    reverse(stops.begin(), stops.end());
+    reverse(lines.begin(), lines.end());
     return path;
 }
 
-vector<int> Graph::bfsstops(int v, int fv, vector<string> &stops) {
+vector<int> Graph::bfsstops(int v, int fv, vector<string> &lines) {
     if(v == fv){return {v};}
 
     resetNodePathingValues();
@@ -83,14 +85,14 @@ vector<int> Graph::bfsstops(int v, int fv, vector<string> &stops) {
                 nodes[w].pred = u;
                 nodes[w].predline = e.line;
                 nodes[w].dist = nodes[u].dist + 1;
-                if(w == fv){return backtrace(v, fv, stops);}
+                if(w == fv){return backtrace(v, fv, lines);}
             }
         }
     }
     return {};
 }
 
-vector<int> Graph::dijkstraPath(int sNode, int endNode, vector<string> &stops) {
+vector<int> Graph::dijkstraPath(int sNode, int endNode, vector<string> &lines) {
     resetNodePathingValues();
 
     MinHeap<int, int> minHeap = MinHeap<int, int>(this->n, -1);
@@ -114,17 +116,16 @@ vector<int> Graph::dijkstraPath(int sNode, int endNode, vector<string> &stops) {
         }
     }
 
-    return backtrace(sNode, endNode, stops);
+    return backtrace(sNode, endNode, lines);
 }
 
-vector<int> Graph::dijkstraPathLines(int sNode, int endNode, vector<string> &stops) {
+vector<int> Graph::dijkstraPathLines(int sNode, int endNode, vector<string> &lines) {
     resetNodePathingValues();
 
     MinHeap<int, int> minHeap = MinHeap<int, int>(this->n, -1);
 
     for(int i = 1; i <= n; i++){
         minHeap.insert(i, nodes[i].dist);
-        nodes[i].predline = "-1";
     }
 
     minHeap.decreaseKey(sNode, nodes[sNode].dist = 0);
@@ -142,8 +143,38 @@ vector<int> Graph::dijkstraPathLines(int sNode, int endNode, vector<string> &sto
             }
         }
     }
-    return backtrace(sNode, endNode, stops);
+    return backtrace(sNode, endNode, lines);
 }
+
+
+int Graph::prim(int r) {
+    MinHeap<int, int> heap(nodes.size(), -1);
+
+    for(int i = 1; i < nodes.size(); i++){
+        heap.insert(i, nodes[i].dist = INT32_MAX);
+    }
+
+    heap.decreaseKey(r, nodes[r].dist = 0);
+
+
+    while(heap.getSize() != 0){
+        int u = heap.removeMin();
+        for(auto &v : nodes[u].adj){
+            if(heap.hasKey(v.dest) && (v.weight < nodes[v.dest].dist)){
+                heap.decreaseKey(v.dest, nodes[v.dest].dist = v.weight);
+            }
+        }
+    }
+
+    int sumDist = 0;
+
+    for(int i = 1; i < nodes.size(); i++){
+        sumDist += nodes[i].dist;
+    }
+
+    return sumDist;
+}
+
   
 void Graph::addTemporatyNodes() {
     nodes.push_back(*(new Node()));
