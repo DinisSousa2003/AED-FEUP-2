@@ -18,6 +18,7 @@ void Graph::addEdge(int src, int dest, string line, int weight) {
 
 void Graph::printGraph(){
     for(int v = 1; v < nodes.size(); v++){
+
         cout << v << " : ";
         for(auto e : nodes[v].adj){
             cout << e.dest << " ";
@@ -25,6 +26,7 @@ void Graph::printGraph(){
         cout << endl;
     }
 }
+
 
 void Graph::printLines(){
     for(int v = 1; v <=n; v++){
@@ -42,10 +44,31 @@ void Graph::printLines(){
 vector<int> Graph::bfsdistance(int v, int fv) {
     if(v == fv){return {v};}
 
-    for (int v=1; v<=n; v++){
-        nodes[v].visited = false;
-        nodes[v].dist = 0;
+void Graph::resetNodePathingValues() {
+    for (int i=1; i<=n; i++) {
+        nodes.at(i).dist=INT32_MAX;
+        nodes.at(i).visited=false;
+        nodes.at(i).pred=-1;
     }
+}
+
+
+vector<int> Graph::backtrace(int start, int end, vector<string> &stops) {
+    if(nodes[end].pred == -1){return {};}
+    vector<int> path = {end};
+    while (*path.rbegin() != start){
+        path.push_back(nodes[*path.rbegin()].pred);
+        stops.push_back(nodes[*path.rbegin()].predline);
+    }
+    reverse(path.begin(), path.end());
+    reverse(stops.begin(), stops.end());
+    return path;
+}
+
+vector<int> Graph::bfsstops(int v, int fv, vector<string> &stops) {
+    if(v == fv){return {v};}
+
+    resetNodePathingValues();
 
     queue<int> q; // queue of unvisited nodes
     q.push(v);
@@ -58,24 +81,70 @@ vector<int> Graph::bfsdistance(int v, int fv) {
                 q.push(w);
                 nodes[w].visited = true;
                 nodes[w].pred = u;
+                nodes[w].predline = e.line;
                 nodes[w].dist = nodes[u].dist + 1;
-                if(w == fv){return backtrace(v, fv);}
+                if(w == fv){return backtrace(v, fv, stops);}
             }
         }
     }
     return {};
 }
 
-vector<int> Graph::backtrace(int start, int end) {
-    vector<int> path = {end};
-    while (*path.rbegin() != start){
-        path.push_back(nodes[*path.rbegin()].pred);
+vector<int> Graph::dijkstraPath(int sNode, int endNode, vector<string> &stops) {
+    resetNodePathingValues();
+
+    MinHeap<int, int> minHeap = MinHeap<int, int>(this->n, -1);
+
+    for(int i = 1; i <= n; i++){
+        minHeap.insert(i, nodes[i].dist);
     }
-    reverse(path.begin(), path.end());
-    return path;
+
+    minHeap.decreaseKey(sNode, nodes[sNode].dist = 0);
+
+    while(minHeap.getSize() > 0) {
+        int cNode = minHeap.removeMin();
+        nodes.at(cNode).visited=true;
+
+        for (Edge edge: nodes.at(cNode).adj) {
+            if (!nodes[edge.dest].visited && nodes.at(cNode).dist + edge.weight < nodes.at(edge.dest).dist) {
+                minHeap.decreaseKey(edge.dest, nodes[edge.dest].dist = nodes[cNode].dist + edge.weight);
+                nodes[edge.dest].pred = cNode;
+                nodes[edge.dest].predline = edge.line;
+            }
+        }
+    }
+
+    return backtrace(sNode, endNode, stops);
 }
 
+vector<int> Graph::dijkstraPathLines(int sNode, int endNode, vector<string> &stops) {
+    resetNodePathingValues();
 
+    MinHeap<int, int> minHeap = MinHeap<int, int>(this->n, -1);
+
+    for(int i = 1; i <= n; i++){
+        minHeap.insert(i, nodes[i].dist);
+        nodes[i].predline = "-1";
+    }
+
+    minHeap.decreaseKey(sNode, nodes[sNode].dist = 0);
+
+    while(minHeap.getSize() > 0) {
+        int cNode = minHeap.removeMin();
+        nodes.at(cNode).visited=true;
+
+        for (Edge edge: nodes.at(cNode).adj) {
+            int changeLine = (nodes[cNode].predline == edge.line) ? 0 : 1;
+            if (!nodes[edge.dest].visited && nodes[cNode].dist + changeLine < nodes[edge.dest].dist) {
+                minHeap.decreaseKey(edge.dest, nodes[edge.dest].dist = nodes[cNode].dist + changeLine);
+                nodes[edge.dest].pred = cNode;
+                nodes[edge.dest].predline = edge.line;
+            }
+        }
+    }
+    return backtrace(sNode, endNode, stops);
+}
+  
 void Graph::addTemporatyNodes() {
     nodes.push_back(*(new Node()));
     nodes.push_back(*(new Node()));

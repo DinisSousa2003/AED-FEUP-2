@@ -8,34 +8,6 @@
 #include <sstream>
 #include <cmath>
 
-void STCP::readLines() {
-    ifstream file;
-
-    file.open("..//Tests//dataset//lines.csv");
-
-    if(!file.is_open()){
-        cerr << "Unable to open file" << endl;
-    }
-
-    string line, code, name;
-    //remove header
-    getline(file, line);
-
-    while(getline(file, line)){
-        stringstream lineSS(line);
-        getline(lineSS, code, ',');
-        getline(lineSS, name);
-
-        Line stcpLine(code, name);
-
-        stcpLine.addStops('0');
-        stcpLine.addStops('1');
-
-        lines.insert(pair<string, Line>(code, stcpLine));
-    }
-    file.close();
-}
-
 void STCP::readStops() {
     ifstream file;
 
@@ -77,6 +49,36 @@ void STCP::readStops() {
     }
 }
 
+
+
+void STCP::readLines() {
+    ifstream file;
+
+    file.open("..//Tests//dataset//lines.csv");
+
+    if(!file.is_open()){
+        cerr << "Unable to open file" << endl;
+    }
+
+    string line, code, name;
+    //remove header
+    getline(file, line);
+
+    while(getline(file, line)){
+        stringstream lineSS(line);
+        getline(lineSS, code, ',');
+        getline(lineSS, name);
+
+        Line stcpLine(code, name);
+
+        stcpLine.addStops('0');
+        stcpLine.addStops('1');
+
+        lines.insert(pair<string, Line>(code, stcpLine));
+    }
+    file.close();
+}
+
 map<string, Line> STCP::getLines() {
     return lines;
 }
@@ -89,8 +91,9 @@ map<int, Stop> STCP::getStops() {
     return stops;
 }
 
-void STCP::addEdges(Graph &g1) {
+void STCP::addEdges(Graph &g1, bool night) {
     for(auto it = lines.begin(); it != lines.end(); it++){
+        if(it->second.getNight() != night){ continue;}
         Line l = it->second;
         auto line0 = l.getLine0(), line1 = l.getLine1();
 
@@ -100,14 +103,12 @@ void STCP::addEdges(Graph &g1) {
             string s2 = (*it0);
             int idx1 = indexStops.at(s1), idx2 = indexStops.at(s2);
             Stop stop1 = stops.at(idx1), stop2 = stops.at(idx2);
-            g1.addEdge(idx1, idx2, l.getName(), weigth(stop1, stop2));
+            g1.addEdge(idx1, idx2, l.getCode(), weigth(stop1, stop2));
 
             if(stop1.getZone() != stop2.getZone() && !zones.at(stop1.getZone()).isAdjacent(stop2.getZone())){
                 zones.at(stop1.getZone()).addAdjacent(stop2.getZone());
                 zones.at(stop2.getZone()).addAdjacent(stop1.getZone());
             }
-
-
         }
 
         for(auto it1 = line1.begin(); it1 != line1.end(); ){
@@ -116,7 +117,7 @@ void STCP::addEdges(Graph &g1) {
             string s2 = (*it1);
             int idx1 = indexStops.at(s1), idx2 = indexStops.at(s2);
             Stop stop1 = stops.at(idx1), stop2 = stops.at(idx2);
-            g1.addEdge(idx1, idx2, l.getName(), weigth(stop1, stop2));
+            g1.addEdge(idx1, idx2, l.getCode(), weigth(stop1, stop2));
         }
     }
 }
@@ -171,14 +172,27 @@ void STCP::addWalkingEdges(Graph &g1, double dist) {
 int STCP::fewerStops(Graph &g1, string s1, string s2) {
     int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
     cout << i1 << " " << i2 << endl;
-    vector<int> path =  g1.bfsdistance(i1, i2);
-    for(auto it = path.begin(); it != path.end(); it++)
-        cout << stops.at(*it).getCode() << " ";
+    vector<string> lines;
+    vector<int> intPath = g1.dijkstraPath(i1, i2, lines);
+    vector<string> strPath;
+    for (int i: intPath) strPath.push_back(stops.at(i).getCode());
+    for (auto &l : lines) cout << l << " ";
     cout << endl;
     return path.size() - 1; //distance = number of stops - 1
 }
 
-
+vector<string> STCP::shortestPath(Graph &g1, string s1, string s2) {
+    int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
+    cout << i1 << " " << i2 << endl;
+    vector<string> lines;
+    vector<int> intPath = g1.dijkstraPath(i1, i2, lines);
+    vector<string> strPath;
+    for (int i: intPath) strPath.push_back(stops.at(i).getCode());
+    for (auto &l : lines) cout << l << " ";
+    cout << endl;
+    return strPath;
+}
+  
 bool STCP::readInput(string &stringToStore) const{
     string temp;
     getline(cin,temp);
@@ -401,3 +415,30 @@ void STCP::removeTemporaryStops(Graph &g1) {
     g1.removeTemporaryNodes();
     g1.printGraph();
 }
+
+
+
+vector<string> STCP::leastStopsPath(Graph &g1, string s1, string s2) {
+    int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
+    cout << i1 << " " << i2 << endl;
+    vector<string> lines;
+    vector<int> intPath = g1.bfsstops(i1, i2, lines);
+    vector<string> strPath;
+    for (int i: intPath) strPath.push_back(stops.at(i).getCode());
+    for (auto &l : lines) cout << l << " ";
+    cout << endl;
+    return strPath;
+}
+
+vector<string> STCP::leastLinesChanged(Graph &g1, string s1, string s2) {
+    int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
+    cout << i1 << " " << i2 << endl;
+    vector<string> lines;
+    vector<int> intPath = g1.dijkstraPathLines(i1, i2, lines);
+    vector<string> strPath;
+    for (int i: intPath) strPath.push_back(stops.at(i).getCode());
+    for (auto &l : lines) cout << l << " ";
+    cout << endl;
+    return strPath;
+}
+

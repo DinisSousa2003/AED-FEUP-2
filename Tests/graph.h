@@ -23,12 +23,17 @@ class Graph {
         int dist;
         int pred;
         bool visited;
-        string name;
+        string predline;
     };
 
     int n;              // Graph size (vertices are numbered from 1 to n)
     bool hasDir;        // false: undirect; true: directed
     vector<Node> nodes; // The list of nodes being represented
+
+
+private:
+    void resetNodePathingValues();
+    vector<int> backtrace(int start, int end, vector<string> &stops);
 
 public:
     // Constructor: nr nodes and direction (default: undirected)
@@ -43,6 +48,10 @@ public:
     void printGraph();
     void printLines();
     vector<int> backtrace(int start, int end);
+    vector<int> bfsstops(int v, int fv, vector<string> &stops);
+    vector<int> dijkstraPath(int sNode, int endNode, vector<string> &stops);
+    vector<int> dijkstraPathLines(int sNode, int endNode, vector<string> &stops);
+    void printGraph();
 };
 
 #endif
