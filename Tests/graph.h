@@ -41,6 +41,13 @@ public:
 
     // Add edge from source to destination with a certain weight
     void addEdge(int src, int dest, string line, int weight = 1);
+    void addTemporatyNodes();
+    void removeTemporaryNodes();
+    void removeWalkingEdges();
+    vector<int> bfsdistance(int v, int fv);
+    void printGraph();
+    void printLines();
+    vector<int> backtrace(int start, int end);
     vector<int> bfsstops(int v, int fv, vector<string> &stops);
     vector<int> dijkstraPath(int sNode, int endNode, vector<string> &stops);
     vector<int> dijkstraPathLines(int sNode, int endNode, vector<string> &stops);
