@@ -16,7 +16,8 @@ int main() {
         cout << "zone " << z.second.getCode() << endl;
         for (auto a:z.second.getAdjacents()) cout << "Adjacent" << a << endl;
     }*/
-    g1.printGraph();
-    cout << stcp.fewerStops(g1, "5OTR2", "PCUA2");
+    //g1.printGraph();
+    // cout << stcp.fewerStops(g1, "5OTR2", "PCUA2");
+    stcp.runUserInterface(g1);
     return 0;
 }

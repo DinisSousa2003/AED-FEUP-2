@@ -61,3 +61,24 @@ vector<int> Graph::backtrace(int start, int end) {
     reverse(path.begin(), path.end());
     return path;
 }
+
+
+void Graph::addTemporatyNodes() {
+    nodes.push_back(*(new Node()));
+    nodes.push_back(*(new Node()));
+}
+
+void Graph::removeTemporaryNodes() {
+    nodes.pop_back();
+    nodes.pop_back();
+}
+
+void Graph::removeWalkingEdges() {
+    for (auto n:nodes) {
+        list<Edge>::iterator it = n.adj.begin();
+        while (it != n.adj.end()){
+            if (it->line == "Walking") n.adj.erase(it);
+            else it++;
+        }
+    }
+}
