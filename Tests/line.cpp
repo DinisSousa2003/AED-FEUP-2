@@ -8,10 +8,10 @@
 
 Line::Line(string c, string n) : code(c), name(n)
 {
-    if(code[-1] == 'M'){
+    night = false;
+    if(*code.rbegin() == 'M'){
         night = true;
     }
-    night = false;
 }
 
 void Line::addStops(char direction) {
