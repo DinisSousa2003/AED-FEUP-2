@@ -6,8 +6,8 @@ int main() {
     STCP stcp;
     stcp.readStops();
     stcp.readLines();
-    Graph g1(stcp.getStops().size() + 1, true);
-    Graph g2(stcp.getStops().size() + 1, true);
+    Graph g1(stcp.getStops().size(), true);
+    Graph g2(stcp.getStops().size(), true);
     stcp.addEdges(g1, false);
     stcp.addEdges(g2, true);
   /* testing walking
