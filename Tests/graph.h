@@ -33,7 +33,7 @@ class Graph {
 
 private:
     void resetNodePathingValues();
-    vector<int> backtrace(int start, int end);
+    vector<int> backtrace(int start, int end, vector<string> &stops);
 
 public:
     // Constructor: nr nodes and direction (default: undirected)
@@ -41,9 +41,9 @@ public:
 
     // Add edge from source to destination with a certain weight
     void addEdge(int src, int dest, string line, int weight = 1);
-    vector<int> bfsstops(int v, int fv);
-    vector<int> dijkstraPath(int sNode, int endNode);
-    vector<int> dijkstraPathLines(int sNode, int endNode);
+    vector<int> bfsstops(int v, int fv, vector<string> &stops);
+    vector<int> dijkstraPath(int sNode, int endNode, vector<string> &stops);
+    vector<int> dijkstraPathLines(int sNode, int endNode, vector<string> &stops);
     void printGraph();
 };
 
