@@ -268,11 +268,12 @@ void STCP::runUserInterface(Graph &g1, Graph &g2) {
         cout << "Hello fellow STCP traveller! Welcome!" << endl;
         do{
             cout << "Will you be travelling by day or by night?(d/n) " << endl;
+            stayInMenu = true;
             readChar(timeOfDay);
             if (timeOfDay == 'd') g = &g1;
             else if(timeOfDay == 'n') g = &g2;
             else {
-                cout << "Invalid Input";
+                cout << "Invalid Input" << endl;
                 stayInMenu = false;
             }
         } while (!stayInMenu);
@@ -298,7 +299,7 @@ void STCP::runUserInterface(Graph &g1, Graph &g2) {
                     stayInMenu = codigoMenu(start, destiny);
                     break;
                 default:
-                    cout << "Invalid Input";
+                    cout << "Invalid Input" << endl;
                     break;
             }
         }while (!stayInMenu);
@@ -335,13 +336,13 @@ void STCP::runUserInterface(Graph &g1, Graph &g2) {
                 leastZonesTraversed(*g,start,destiny);
                 break;
             default:
-                cout << "Invalid Input";
+                cout << "Invalid Input" << endl;
                 break;
         }
         if(start == "Start") removeTemporaryStops(*g);
         cout << "Next trip?(y/n) ";
         stayInMenu = readChar(next);
-        if(next == 'n') break;
+        if(tolower(next) == 'n') break;
 
     } while(stayInMenu);
 }

@@ -12,12 +12,13 @@ int main() {
     stcp.addEdges(g2, true);
     stcp.addZones(g1);
     stcp.addZones(g2);
-/*
+
+    /*
     //Test for shortest path between 2 stops
     stcp.addWalkingEdges(g1,0.2);
     stcp.addWalkingEdges(g2,0.2);
     cout << "\nShortest Path\n";
-    vector<string> strPath = stcp.shortestPath(g1, "5OTR2", "PCUA2");
+    vector<string> strPath = stcp.shortestPath(g2, "ERM3", "PCUA2");
     cout << endl;
     strPath = stcp.shortestPath(g1, "CQ8", "MLAM");
     cout << endl;
