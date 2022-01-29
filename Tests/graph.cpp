@@ -27,24 +27,6 @@ void Graph::printGraph(){
     }
 }
 
-
-void Graph::printLines(){
-    for(int v = 1; v <=n; v++){
-        cout << v << " : ";
-        for(auto e : nodes[v].adj){
-            if (e.line == "Walking") {
-                cout << "Node " << v << " Edge " << e.line;
-                cout << endl;
-            }
-        }
-        cout << endl;
-    }
-}
-
-vector<int> Graph::bfsdistance(int v, int fv) {
-    if(v == fv) return {v};
-}
-
 void Graph::resetNodePathingValues() {
     for (int i=1; i<=n; i++) {
         nodes.at(i).dist=INT32_MAX;
@@ -150,8 +132,10 @@ vector<int> Graph::dijkstraPathLines(int sNode, int endNode, vector<string> &lin
 int Graph::prim(int r) {
     MinHeap<int, int> heap(nodes.size(), -1);
 
+    resetNodePathingValues();
+
     for(int i = 1; i < nodes.size(); i++){
-        heap.insert(i, nodes[i].dist = INT32_MAX);
+        heap.insert(i, nodes[i].dist);
     }
 
     heap.decreaseKey(r, nodes[r].dist = 0);
@@ -159,6 +143,7 @@ int Graph::prim(int r) {
 
     while(heap.getSize() != 0){
         int u = heap.removeMin();
+        nodes[u].visited = true;
         for(auto &v : nodes[u].adj){
             if(heap.hasKey(v.dest) && (v.weight < nodes[v.dest].dist)){
                 heap.decreaseKey(v.dest, nodes[v.dest].dist = v.weight);
@@ -169,7 +154,8 @@ int Graph::prim(int r) {
     int sumDist = 0;
 
     for(int i = 1; i < nodes.size(); i++){
-        sumDist += nodes[i].dist;
+        if(nodes[i].visited)
+            sumDist += nodes[i].dist;
     }
 
     return sumDist;

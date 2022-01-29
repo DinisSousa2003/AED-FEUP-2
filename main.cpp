@@ -20,7 +20,7 @@ int main() {
         cout << "zone " << z.second.getCode() << endl;
         for (auto a:z.second.getAdjacents()) cout << "Adjacent" << a << endl;
     }*/
-
+/*
     //g1.printGraph();
     //g2.printGraph();
 
@@ -54,8 +54,9 @@ int main() {
     cout << endl;
     strPath = stcp.leastLinesChanged(g2, "CQ8", "MLAM");
     cout << endl;
+    */
 
-    //stcp.runUserInterface(g1,g2);
+    stcp.runUserInterface(g1,g2);
   
     return 0;
 }

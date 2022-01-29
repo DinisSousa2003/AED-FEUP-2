@@ -7,7 +7,10 @@
 #include <fstream>
 #include <iostream>
 
-Zone::Zone(string c) : code(c) {}
+Zone::Zone(string c) : code(c) {
+    adj.push_back("Start");
+    adj.push_back("Destiny");
+}
 
 void Zone::addStop(string stop) {
     stops.push_back(stop);

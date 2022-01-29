@@ -120,6 +120,7 @@ void STCP::addEdges(Graph &g1, bool night) {
             g1.addEdge(idx1, idx2, l.getCode(), weigth(stop1, stop2));
         }
     }
+
 }
 
 double STCP::haversine(double lat1, double lon1, double lat2, double lon2){
@@ -147,12 +148,24 @@ double STCP::weigth(Stop &s1, Stop &s2) {
 
 
 void STCP::addWalkingEdges(Graph &g1, double dist) {
+
     if(dist == currentWalkingDist) return;
     g1.removeWalkingEdges();
     currentWalkingDist = dist;
     double tempDist;
     Stop tempStop("", "", "", 0.0, 0.0);
     int i = 0;
+    for (auto &s1: stops) {
+        for (auto &s2: stops) {
+            if (s1.second.getCode() == s2.second.getCode()) continue;
+            tempDist = haversine(s1.second.getLatitude(), s1.second.getLongitude(), s2.second.getLatitude(),
+                                 s2.second.getLongitude());
+            if (tempDist <= dist) {
+                g1.addEdge(s1.first, s2.first, "Walking", tempDist);
+            }
+        }
+    }
+    /*
     for (auto s1: stops) {
         list<string> adj = zones.at(s1.second.getZone()).getAdjacents();
         for (auto zone: adj) {
@@ -165,7 +178,7 @@ void STCP::addWalkingEdges(Graph &g1, double dist) {
                 }
             }
         }
-    }
+    }*/
 }
 
 vector<string> STCP::shortestPath(Graph &g1, string s1, string s2) {
@@ -255,7 +268,6 @@ bool STCP::readDouble(double &doubleToStore) const {
 }
 
 void STCP::runUserInterface(Graph &g1, Graph &g2) {
-    cout << "Start" << endl;
     int input;
     bool stayInMenu = true;
     int walkingMetro;
@@ -264,7 +276,7 @@ void STCP::runUserInterface(Graph &g1, Graph &g2) {
     char next, timeOfDay;
     Graph* g;
     do {
-
+        cout << g1.getSize() << endl;
         cout << "Mensagem welcoming hihihi" << endl;
         do{
             cout << "Will you be travelling by day or by night?(d/n) " << endl;
@@ -344,7 +356,6 @@ void STCP::runUserInterface(Graph &g1, Graph &g2) {
         if(next == 'n') break;
 
     } while(stayInMenu);
-    cout << "End" << endl;
 }
 
 bool STCP::coordenadasMenu(Graph &g1) {
@@ -398,14 +409,13 @@ bool STCP::codigoMenu(string &start, string &destiny) {
 
 
 void STCP::addTemporaryStops(Graph &g1, Stop &start, Stop &destiny) {
-    indexStops.insert(pair<string, int>("Start", stops.size()));
+    indexStops.insert(pair<string, int>(start.getCode(), stops.size()));
     stops.insert(pair<int, Stop>(stops.size(), start));
-    indexStops.insert(pair<string, int>("Destiny", stops.size()));
+    indexStops.insert(pair<string, int>(destiny.getCode(), stops.size()));
     stops.insert(pair<int, Stop>(stops.size(),destiny));
     g1.printGraph();
     g1.addTemporatyNodes();
     g1.printGraph();
-
 }
 
 void STCP::removeTemporaryStops(Graph &g1) {
@@ -414,7 +424,6 @@ void STCP::removeTemporaryStops(Graph &g1) {
     indexStops.erase("Start");
     indexStops.erase("Destiny");
     g1.removeTemporaryNodes();
-    g1.printGraph();
 }
 
 
