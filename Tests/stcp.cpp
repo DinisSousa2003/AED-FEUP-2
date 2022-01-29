@@ -154,10 +154,7 @@ double STCP::weigth(Stop &s1, Stop &s2) {
 
 
 void STCP::addWalkingEdges(Graph &g1, double dist) {
-
-    if(dist == currentWalkingDist) return;
     g1.removeWalkingEdges();
-    currentWalkingDist = dist;
     double tempDist;
     Stop tempStop("", "", "", 0.0, 0.0);
     int i = 0;
@@ -282,8 +279,7 @@ void STCP::runUserInterface(Graph &g1, Graph &g2) {
     char next, timeOfDay;
     Graph* g;
     do {
-        cout << g1.getSize() << endl;
-        cout << "Mensagem welcoming hihihi" << endl;
+        cout << "Hello fellow STCP traveller! Welcome!" << endl;
         do{
             cout << "Will you be travelling by day or by night?(d/n) " << endl;
             readChar(timeOfDay);
@@ -350,7 +346,7 @@ void STCP::runUserInterface(Graph &g1, Graph &g2) {
                 leastLinesChanged(*g,start,destiny);
                 break;
             case 4:
-
+                leastZonesTraversed(*g,start,destiny);
                 break;
             default:
                 cout << "Invalid Input";
@@ -415,13 +411,11 @@ bool STCP::codigoMenu(string &start, string &destiny) {
 
 
 void STCP::addTemporaryStops(Graph &g1, Stop &start, Stop &destiny) {
-    indexStops.insert(pair<string, int>(start.getCode(), stops.size()));
-    stops.insert(pair<int, Stop>(stops.size(), start));
-    indexStops.insert(pair<string, int>(destiny.getCode(), stops.size()));
-    stops.insert(pair<int, Stop>(stops.size(),destiny));
-    g1.printGraph();
+    indexStops.insert(pair<string, int>(start.getCode(), stops.size() + 1));
+    stops.insert(pair<int, Stop>(stops.size() + 1, start));
+    indexStops.insert(pair<string, int>(destiny.getCode(), stops.size() + 1));
+    stops.insert(pair<int, Stop>(stops.size() + 1,destiny));
     g1.addTemporatyNodes();
-    g1.printGraph();
 }
 
 void STCP::removeTemporaryStops(Graph &g1) {

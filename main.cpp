@@ -12,20 +12,7 @@ int main() {
     stcp.addEdges(g2, true);
     stcp.addZones(g1);
     stcp.addZones(g2);
-    cout << g1.prim(25);
-    cout << g1.prim(25);
-  /* testing walking
-    stcp.addWalkingEdges(g1,0.3);
-    for (auto s:stcp.getStops()) cout << "stop" << endl;
-    for (auto l:stcp.getLines()) cout << "line" << endl;
-    for (auto z:stcp.getZones()) {
-        cout << "zone " << z.second.getCode() << endl;
-        for (auto a:z.second.getAdjacents()) cout << "Adjacent" << a << endl;
-    }*/
 /*
-    //g1.printGraph();
-    //g2.printGraph();
-
     //Test for shortest path between 2 stops
     stcp.addWalkingEdges(g1,0.2);
     stcp.addWalkingEdges(g2,0.2);

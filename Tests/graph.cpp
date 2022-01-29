@@ -158,47 +158,17 @@ vector<int> Graph::dijkstraPathZones(int sNode, int endNode, vector<string> &lin
     return backtrace(sNode, endNode, lines);
 }
 
-int Graph::prim(int r) {
-    MinHeap<int, int> heap(nodes.size(), -1);
-
-    resetNodePathingValues();
-
-    for(int i = 1; i < nodes.size(); i++){
-        heap.insert(i, nodes[i].dist);
-    }
-
-    heap.decreaseKey(r, nodes[r].dist = 0);
-
-
-    while(heap.getSize() != 0){
-        int u = heap.removeMin();
-        nodes[u].visited = true;
-        for(auto &v : nodes[u].adj){
-            if(heap.hasKey(v.dest) && (v.weight < nodes[v.dest].dist)){
-                heap.decreaseKey(v.dest, nodes[v.dest].dist = v.weight);
-            }
-        }
-    }
-
-    int sumDist = 0;
-
-    for(int i = 1; i < nodes.size(); i++){
-        if(nodes[i].visited)
-            sumDist += nodes[i].dist;
-    }
-
-    return sumDist;
-}
-
   
 void Graph::addTemporatyNodes() {
     nodes.push_back(*(new Node()));
     nodes.push_back(*(new Node()));
+    n += 2;
 }
 
 void Graph::removeTemporaryNodes() {
     nodes.pop_back();
     nodes.pop_back();
+    n -= 2;
 }
 
 void Graph::removeWalkingEdges() {

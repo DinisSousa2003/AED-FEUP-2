@@ -64,7 +64,12 @@ public:
      * @param weight Weight of the connection
      */
     void addEdge(int src, int dest, string line, int weight = 1);
-
+    /*!
+     * Assign a given Zone code to a given node
+     *
+     * @param nodeNum
+     * @param zoneName
+     */
     void addZoneToNode(int nodeNum, string zoneName);
     /*!
      * Add temporary nodes
@@ -122,15 +127,6 @@ public:
      * @return Vector with the stops between the two nodes
      */
     vector<int> dijkstraPathZones(int sNode, int endNode, vector<string> &lines);
-    /*!
-     * Algorithm to find the MST (Minimum Spanning Tree) of a graph, starting in a given node
-     * Big 0 : O(|E| log|V|) (where V is the number of nodes and E the number of edges)
-     *
-     * @param sNode Starting node
-     * @return Total distance on the edges
-     */
-    int prim(int sNode);
-    int getSize() {return nodes.size();}
 };
 
 #endif

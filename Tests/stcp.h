@@ -19,7 +19,6 @@ private:
     map<string, Line> lines;
     map<string, Zone> zones;
     map<string , int> indexStops;
-    double currentWalkingDist = 0.0;
     /*!
      * Used to determine the distance between two locations based on their coordinates
      * @param lat1 Latitude of first location
