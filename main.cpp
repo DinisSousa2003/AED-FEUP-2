@@ -10,6 +10,8 @@ int main() {
     Graph g2(stcp.getStops().size(), true);
     stcp.addEdges(g1, false);
     stcp.addEdges(g2, true);
+    stcp.addZones(g1);
+    stcp.addZones(g2);
     cout << g1.prim(25);
     cout << g1.prim(25);
   /* testing walking
@@ -53,6 +55,15 @@ int main() {
     strPath = stcp.leastLinesChanged(g1, "CQ8", "MLAM");
     cout << endl;
     strPath = stcp.leastLinesChanged(g2, "CQ8", "MLAM");
+    cout << endl;
+
+    //Test for least zones traversed
+    cout << "Least zones traversed Path\n";
+    strPath = stcp.leastZonesTraversed(g1, "5OTR2", "PCUA2");
+    cout << endl;
+    strPath = stcp.leastZonesTraversed(g1, "CQ8", "MLAM");
+    cout << endl;
+    strPath = stcp.leastZonesTraversed(g2, "CQ8", "MLAM");
     cout << endl;
 
     //stcp.runUserInterface(g1,g2);

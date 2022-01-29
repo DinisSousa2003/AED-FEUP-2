@@ -20,6 +20,7 @@ class Graph {
 
     struct Node {
         list<Edge> adj; // The list of outgoing edges (to adjacent nodes)
+        string zone;
         int dist;
         int pred;
         bool visited;
@@ -41,6 +42,7 @@ public:
 
     // Add edge from source to destination with a certain weight
     void addEdge(int src, int dest, string line, int weight = 1);
+    void addZoneToNode(int nodeNum, string zoneName);
     void addTemporatyNodes();
     void removeTemporaryNodes();
     void removeWalkingEdges();
@@ -51,6 +53,7 @@ public:
     vector<int> bfsstops(int v, int fv, vector<string> &lines);
     vector<int> dijkstraPath(int sNode, int endNode, vector<string> &lines);
     vector<int> dijkstraPathLines(int sNode, int endNode, vector<string> &lines);
+    vector<int> dijkstraPathZones(int sNode, int endNode, vector<string> &lines);
     int prim(int sNode);
 };
 
