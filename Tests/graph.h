@@ -20,6 +20,7 @@ class Graph {
 
     struct Node {
         list<Edge> adj; // The list of outgoing edges (to adjacent nodes)
+        string zone;
         int dist;
         int pred;
         bool visited;
@@ -63,6 +64,8 @@ public:
      * @param weight Weight of the connection
      */
     void addEdge(int src, int dest, string line, int weight = 1);
+
+    void addZoneToNode(int nodeNum, string zoneName);
     /*!
      * Add temporary nodes
      */
@@ -109,6 +112,16 @@ public:
      * @return Vector with the stops between the two nodes
      */
     vector<int> dijkstraPathLines(int sNode, int endNode, vector<string> &lines);
+    /*!
+     * Finds the minimum path using the dijkstra algorithm, taking into account the minimum number of zone changes
+     * Big 0 : O(|E| log|V|) (where V is the number of nodes and E the number of edges)
+     *
+     * @param sNode Starting node
+     * @param endNode End node
+     * @param lines Vector to store the lines the bus goes trough
+     * @return Vector with the stops between the two nodes
+     */
+    vector<int> dijkstraPathZones(int sNode, int endNode, vector<string> &lines);
     /*!
      * Algorithm to find the MST (Minimum Spanning Tree) of a graph, starting in a given node
      * Big 0 : O(|E| log|V|) (where V is the number of nodes and E the number of edges)

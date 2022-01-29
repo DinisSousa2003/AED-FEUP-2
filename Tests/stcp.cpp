@@ -123,6 +123,12 @@ void STCP::addEdges(Graph &g1, bool night) {
 
 }
 
+void STCP::addZones(Graph &g1) {
+    for (int i = 1; i<stops.size(); i++) {
+        g1.addZoneToNode(i, stops.at(i).getZone());
+    }
+}
+
 double STCP::haversine(double lat1, double lon1, double lat2, double lon2){
     // distance between latitudes
     // and longitudes
@@ -443,6 +449,17 @@ vector<string> STCP::leastLinesChanged(Graph &g1, string s1, string s2) {
     int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
     vector<string> lines;
     vector<int> intPath = g1.dijkstraPathLines(i1, i2, lines);
+    vector<string> strPath;
+    for (int i: intPath) strPath.push_back(stops.at(i).getCode());
+    printPath(strPath,lines);
+    cout << endl;
+    return strPath;
+}
+
+vector<string> STCP::leastZonesTraversed(Graph &g1, string s1, string s2) {
+    int i1 = indexStops.at(s1), i2 = indexStops.at(s2);
+    vector<string> lines;
+    vector<int> intPath = g1.dijkstraPathZones(i1, i2, lines);
     vector<string> strPath;
     for (int i: intPath) strPath.push_back(stops.at(i).getCode());
     printPath(strPath,lines);

@@ -119,6 +119,11 @@ public:
      */
     void addEdges(Graph &g1, bool night);
     /*!
+     * Adds the correct zone to all the nodes in the given graph
+     * @param g1 Graph on which the zones will be added
+     */
+    void addZones(Graph &g1);
+    /*!
      * Adds edges between every two nodes which distance is lower than the given distance
      * @param g1 Graph on which the edges will be added
      * @param dist Maximum walking distance possible
@@ -129,7 +134,7 @@ public:
      * @param g1 Graph on which the function will operate
      * @param s1 Code of the starting stop
      * @param s2 Code of the ending stop
-     * @return
+     * @return Vector of stops passed in correct order
      */
     vector<string> shortestPath(Graph &g1, string s1, string s2);
     /*!
@@ -137,7 +142,7 @@ public:
      * @param g1 Graph on which the function will operate
      * @param s1 Code of the starting stop
      * @param s2 Code of the ending stop
-     * @return
+     * @return Vector of stops passed in correct order
      */
     vector<string> leastStopsPath(Graph &g1, string s1, string s2);
     /*!
@@ -145,9 +150,17 @@ public:
      * @param g1 Graph on which the function will operate
      * @param s1 Code of the starting stop
      * @param s2 Code of the ending stop
-     * @return
+     * @return Vector of stops passed in correct order
      */
     vector<string> leastLinesChanged(Graph &g1, string s1, string s2);
+    /*!
+     * Calculates the path between two stops that changes zones fewer times
+     * @param g1 Graph on which the function will operate
+     * @param s1 Code of the starting stop
+     * @param s2 Code of the ending stop
+     * @return Vector of stops passed in correct order
+     */
+    vector<string> leastZonesTraversed(Graph &g1, string s1, string s2);
     /*!
      * Prints the given path stating which stops should be passed in each line
      * @param stops Vector containing all the stops passed by order
