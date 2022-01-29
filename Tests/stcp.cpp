@@ -168,20 +168,6 @@ void STCP::addWalkingEdges(Graph &g1, double dist) {
             }
         }
     }
-    /*
-    for (auto s1: stops) {
-        list<string> adj = zones.at(s1.second.getZone()).getAdjacents();
-        for (auto zone: adj) {
-            for (auto s2: zones.at(zone).getStops()) {
-                tempStop = stops.at(indexStops.at(s2));
-                tempDist = haversine(s1.second.getLatitude(), s1.second.getLongitude(), tempStop.getLatitude(),
-                                     tempStop.getLongitude());
-                if (tempDist <= dist) {
-                    g1.addEdge(s1.first, indexStops.at(s2), "Walking", tempDist);
-                }
-            }
-        }
-    }*/
 }
 
 vector<string> STCP::shortestPath(Graph &g1, string s1, string s2) {
