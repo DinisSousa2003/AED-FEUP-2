@@ -1,5 +1,5 @@
 # How to navigate STCP, Porto's bus service
-## AED/MIEIC, 2021/22
+## AED/MIEIC, 2021/22 - 2nd Year
 ## Algorithms and Data Structures
 
 ## Description
